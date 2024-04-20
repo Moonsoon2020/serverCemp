@@ -8,7 +8,6 @@ class PersonController {
     @Autowired
     private lateinit var personRepository: PersonRepository
 
-
     @RequestMapping("/")
     @ResponseBody
     fun index(): String {
@@ -20,34 +19,23 @@ class PersonController {
     @PostMapping("/addperson")
     @ResponseBody
     fun addNewPerson(@RequestParam login: String, @RequestParam password: String, @RequestParam status : Boolean): Map<String, Any> {
+
+        val map = mutableMapOf<String, Any>()
+        for (i in personRepository.findAll()){
+            if (i.login == login){
+                map["status"] = false
+                map["error"] = "Полльзователь с таким логиином существует"
+                return map
+            }
+        }
         val person = Person()
         person.login = login
         person.password = password
         person.status = status
         personRepository.save(person)
-        val map = mutableMapOf<String, Any>()
         map["status"] = true
+        map["id"] = person.id_person!!
         return map
-    }
-
-
-    @PostMapping("/setcafe")
-    @ResponseBody
-    fun set_cafe(@RequestParam id: Int, @RequestParam id_cafe: Int): Map<String, Any> {
-        val person = personRepository.findById(id)
-        if (person.isPresent) {
-            val foundPerson = person.get()
-//            foundPerson.id_cafe = id_cafe
-            personRepository.save(foundPerson)
-            val map = mutableMapOf<String, Any>()
-            map["status"] = true
-            return map
-        } else {
-            val map = mutableMapOf<String, Any>()
-            map["status"] = false
-            map["error"] = "User with id $id not found"
-            return map
-        }
     }
 
     @GetMapping("/allpersons")

@@ -1,19 +1,16 @@
 package org.serv.servercemp.user
 
-import Cafe
 import jakarta.persistence.*;
 import jakarta.persistence.Id
 
 @Entity
-class Product {
+class Person{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Int? = null
+    var id_person: Int? = null
+    var login: String? = null
+    var password: String? = null
+    var status: Boolean? = null
 
-    var image: String? = null // Assuming you store image path
-    var title: String? = null
-    var description: String? = null
-
-    @ManyToOne
-    var cafe: Cafe? = null
+    var cafe: Int? = null
 }
